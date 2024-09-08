@@ -9,9 +9,6 @@ export default async function handler(req, res) {
     const { text, userId } = req.body;
     const { data, error } = await supabase
       .from('affirmations')
-      .insert([{ text, user_id: userId }])
-      .single();
-    if (error) return res.status(500).json({ error: error.message });
-    res.json(data);
+      .
   }
 }
