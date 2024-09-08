@@ -1,4 +1,4 @@
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
 import Navbar from '../components/Navbar'
 import GoalList from '../components/GoalList'
 import HabitList from '../components/HabitList'
@@ -8,7 +8,8 @@ import AffirmationList from '../components/AffirmationList'
 import Journal from '../components/Journal'
 
 export default function Dashboard() {
-  const [session] = useSession()
+  const { data: session, status } = useSession()
+  const loading = status === 'loading'
 
   if (!session) {
     return <p>Access Denied</p>

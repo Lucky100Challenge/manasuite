@@ -1,8 +1,9 @@
-import { useSession, signIn, signOut } from 'next-auth/client'
+import { useSession, signIn, signOut } from 'next-auth/react'
 import Navbar from '../components/Navbar'
 
 export default function Home() {
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
+  const loading = status === 'loading'
 
   return (
     <div className="container mx-auto">
