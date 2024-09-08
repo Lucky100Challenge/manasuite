@@ -1,14 +1,17 @@
-import prisma from '../../prisma/client'
+import { supabase } from '../../lib/supabaseClient';
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
-    const affirmations = await prisma.affirmation.findMany()
-    res.json(affirmations)
+    const { data, error } = await supabase.from('affirmations').select('*');
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
   } else if (req.method === 'POST') {
-    const { text, userId } = req.body
-    const affirmation = await prisma.affirmation.create({
-      data: { text, userId },
-    })
-    res.json(affirmation)
+    const { text, userId } = req.body;
+    const { data, error } = await supabase
+      .from('affirmations')
+      .insert([{ text, user_id: userId }])
+      .single();
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
   }
 }

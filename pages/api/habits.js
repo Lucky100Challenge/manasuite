@@ -1,14 +1,17 @@
-import prisma from '../../prisma/client'
+import { supabase } from '../../lib/supabaseClient';
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
-    const habits = await prisma.habit.findMany()
-    res.json(habits)
+    const { data, error } = await supabase.from('habits').select('*');
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
   } else if (req.method === 'POST') {
-    const { title, frequency, userId } = req.body
-    const habit = await prisma.habit.create({
-      data: { title, frequency, userId, streak: 0 },
-    })
-    res.json(habit)
+    const { title, frequency, userId } = req.body;
+    const { data, error } = await supabase
+      .from('habits')
+      .insert([{ title, frequency, user_id: userId, streak: 0 }])
+      .single();
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
   }
 }

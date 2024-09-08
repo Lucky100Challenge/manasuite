@@ -1,7 +1,5 @@
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import prisma from '../../../prisma/client'
 
 export default NextAuth({
   providers: [
@@ -11,6 +9,5 @@ export default NextAuth({
     }),
     // Add other providers as needed
   ],
-  adapter: PrismaAdapter(prisma),
   secret: process.env.SECRET,
 })
