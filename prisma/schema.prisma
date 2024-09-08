@@ -1,0 +1,72 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  name  String?
+  goals Goal[]
+  habits Habit[]
+  todos ToDo[]
+  events CalendarEvent[]
+  affirmations Affirmation[]
+  journalEntries JournalEntry[]
+}
+
+model Goal {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  isLongTerm Boolean
+  progress  Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Habit {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  frequency String
+  streak    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model ToDo {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  dueDate   DateTime?
+  priority  String
+  completed Boolean
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model CalendarEvent {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  date      DateTime
+  reminder  Boolean
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Affirmation {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  text      String
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model JournalEntry {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  content   String
+  date      DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
